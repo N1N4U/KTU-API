@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTU API Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0e13;
+            --bg-card: #111827;
+            --bg-input: #1f2937;
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --text: #f9fafb;
+            --text-secondary: #9ca3af;
+            --border: #374151;
+            --error: #ef4444;
+            --code-bg: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 1rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            padding: 1rem 0;
+            border-bottom: 2px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .input-section {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1.05rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            flex: 1;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        @media (max-width: 968px) {
+            .results-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+
+            .results-container .code-section {
+                order: -1;
+                max-height: 50vh;
+            }
+        }
+
+        .code-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .code-header {
+            background: var(--code-bg);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            gap: 0.5rem;
+        }
+
+        .code-title {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .code-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .download-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .code-content {
+            padding: 1.5rem;
+            background: var(--code-bg);
+            overflow: auto;
+            flex: 1;
+            min-height: 0;
+        }
+
+        pre {
+            margin: 0;
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .details-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .detail-group {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-group:last-child {
+            border-bottom: none;
+        }
+
+        .detail-group h2 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+
+        .detail-value {
+            color: var(--text);
+            word-break: break-word;
+            font-size: 1.05rem;
+        }
+
+        .detail-value:empty::before {
+            content: "—";
+            color: var(--text-secondary);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 KTU API Tester</h1>
+            <p class="subtitle">Test the KTU Student Data Scraper API</p>
+        </header>
+
+        <div class="input-section">
+            <form id="ktuForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your KTU username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn" id="submitBtn">Fetch Student Data</button>
+            </form>
+        </div>
+
+        <div id="loadingSection" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Fetching student data...</p>
+        </div>
+
+        <div id="errorSection" class="error-message hidden"></div>
+
+        <div id="resultsSection" class="results-container hidden">
+            <div class="details-section">
+                <div class="detail-group">
+                    <h2>Request Information</h2>
+                    <div id="requestDetails"></div>
+                </div>
+                <div class="detail-group">
+                    <h2>Personal Information</h2>
+                    <div id="personalDetails"></div>
+                </div>
+                <div class="detail-group">
+                    <h2>Admission Details</h2>
+                    <div id="admissionDetails"></div>
+                </div>
+                <div class="detail-group">
+                    <h2>Contact Information</h2>
+                    <div id="contactDetails"></div>
+                </div>
+                <div class="detail-group">
+                    <h2>Bank Account Details</h2>
+                    <div id="bankDetails"></div>
+                </div>
+                <div class="detail-group">
+                    <h2>Qualification Details</h2>
+                    <div id="qualificationDetails"></div>
+                </div>
+                <div class="detail-group">
+                    <h2>Guardian Details</h2>
+                    <div id="guardianDetails"></div>
+                </div>
+                <div class="detail-group">
+                    <h2>Academic Performance</h2>
+                    <div id="curriculumDetails"></div>
+                </div>
+            </div>
+
+            <div class="code-section">
+                <div class="code-header">
+                    <span class="code-title">JSON Response</span>
+                    <div class="code-actions">
+                        <button class="code-btn" id="copyBtn" title="Copy JSON to clipboard">
+                            📋 Copy
+                        </button>
+                        <button class="download-btn" id="downloadBtn">💾 Download</button>
+                    </div>
+                </div>
+                <div class="code-content">
+                    <pre id="jsonOutput"></pre>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Built with ❤️ by N1N4U | <a href="https://github.com/N1N4U/KTU-API" target="_blank">View on GitHub</a></p>
+        </footer>
+    </div>
+
+    <script>
+        let currentData = null;
+
+        document.getElementById('ktuForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Hide previous results and errors
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('errorSection').classList.add('hidden');
+            document.getElementById('loadingSection').classList.remove('hidden');
+            document.getElementById('submitBtn').disabled = true;
+
+            try {
+                const response = await fetch('/api/student', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error_message || `HTTP error! status: ${response.status}`);
+                }
+
+                currentData = data;
+                displayResults(data);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                document.getElementById('loadingSection').classList.add('hidden');
+                document.getElementById('submitBtn').disabled = false;
+            }
+        });
+
+        function showError(message) {
+            const errorSection = document.getElementById('errorSection');
+            errorSection.textContent = `❌ Error: ${message}`;
+            errorSection.classList.remove('hidden');
+        }
+
+        function displayResults(data) {
+            // Display JSON
+            document.getElementById('jsonOutput').textContent = JSON.stringify(data, null, 2);
+
+            // Display Request Info
+            if (data.request_info) {
+                displaySection('requestDetails', data.request_info, [
+                    'timestamp', 'username', 'status'
+                ]);
+            }
+
+            // Display Personal Details (all fields)
+            if (data.personal) {
+                const personalFields = Object.keys(data.personal);
+                displaySection('personalDetails', data.personal, personalFields);
+            }
+
+            // Display Admission Details (all fields)
+            if (data.admission_details) {
+                const admissionFields = Object.keys(data.admission_details);
+                displaySection('admissionDetails', data.admission_details, admissionFields);
+            }
+
+            // Display Contact Details (all fields)
+            if (data.contact_details) {
+                const contactFields = Object.keys(data.contact_details);
+                displaySection('contactDetails', data.contact_details, contactFields);
+            }
+
+            // Display Bank Details (all fields)
+            if (data.bank_account_details) {
+                const bankFields = Object.keys(data.bank_account_details);
+                displaySection('bankDetails', data.bank_account_details, bankFields);
+            }
+
+            // Display Qualification Details (all fields)
+            if (data.qualification_details) {
+                const qualificationFields = Object.keys(data.qualification_details);
+                displaySection('qualificationDetails', data.qualification_details, qualificationFields);
+            }
+
+            // Display Guardian Details
+            if (data.guardian_details) {
+                const guardianHtml = [];
+                for (const [relation, details] of Object.entries(data.guardian_details)) {
+                    guardianHtml.push(`<h3 style="color: var(--primary); margin-top: 1rem; text-transform: capitalize;">${relation}</h3>`);
+                    const fields = Object.keys(details);
+                    fields.forEach(field => {
+                        const label = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        guardianHtml.push(createDetailRow(label, details[field] || ''));
+                    });
+                }
+                document.getElementById('guardianDetails').innerHTML = guardianHtml.join('');
+            }
+
+            // Display Curriculum (minimal)
+            if (data.curriculum) {
+                const curriculumHtml = [];
+                if (data.curriculum.general) {
+                    curriculumHtml.push(createDetailRow('Current Semester', data.curriculum.general.current_semester));
+                    curriculumHtml.push(createDetailRow('Total CGPA', data.curriculum.general.total_cgpa));
+                }
+                // Show semester summary
+                if (data.curriculum.semesters) {
+                    curriculumHtml.push('<h3 style="color: var(--primary); margin-top: 1rem;">Semester Summary</h3>');
+                    for (const [sem, details] of Object.entries(data.curriculum.semesters)) {
+                        const semLabel = sem.toUpperCase();
+                        const sgpa = details.sgpa || 'N/A';
+                        const courseCount = details.courses ? details.courses.length : 0;
+                        curriculumHtml.push(createDetailRow(semLabel, `SGPA: ${sgpa} | Courses: ${courseCount}`));
+                    }
+                }
+                document.getElementById('curriculumDetails').innerHTML = curriculumHtml.join('');
+            }
+
+            document.getElementById('resultsSection').classList.remove('hidden');
+        }
+
+        function displaySection(elementId, data, fields) {
+            const html = fields.map(field => {
+                const label = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                return createDetailRow(label, data[field] || '');
+            }).join('');
+            document.getElementById(elementId).innerHTML = html;
+        }
+
+        function createDetailRow(label, value) {
+            return `
+                <div class="detail-row">
+                    <div class="detail-label">${label}</div>
+                    <div class="detail-value">${value}</div>
+                </div>
+            `;
+        }
+
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            if (!currentData) return;
+
+            const dataStr = JSON.stringify(currentData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `ktu_data_${currentData.request_info?.username || 'student'}_${new Date().getTime()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const jsonText = document.getElementById('jsonOutput').textContent;
+            navigator.clipboard.writeText(jsonText).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.background = 'var(--primary-hover)';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = 'var(--primary)';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        });
+    </script>
+</body>
+</html>

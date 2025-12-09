@@ -1,0 +1,123 @@
+
+{
+    "request_info": {
+        "timestamp": "",
+        "username": ""
+    },
+    "personal": {
+        "gender": "",
+        "dob": "",
+        "category": "",
+        "religion": "",
+        "caste": "",
+        "aadhar_number": "",
+        "nationality": "",
+        "mother_tongue": "",
+        "blood_group": "",
+        "name_age_proof": "", 
+        "student_photo": "",
+        "student_signature": ""
+    },
+    "admission_details": {
+        "college_admission_number": "",
+        "date_of_admission": "",
+        "admitted_program": "",
+        "admitted_scheme": "",
+        "admitted_branch": "",
+        "admission_type": "",
+        "program_to_be_completed_by": "",
+        "staff_advisor": "",
+        "institution_name": "",
+        "admission_quota": ""
+    },
+    "contact_details": {
+        "email": "",
+        "mobile": "",
+        "permanent_address": "",
+        "communication_address": "",
+        "landline": ""
+    },
+    "bank_account_details": {
+        "account_holder": "",
+        "account_number": "",
+        "ifsc_code": "",
+        "bank_name": "",
+        "branch_name": ""
+    },
+    "qualification_details": {
+        "qualification": "",
+        "qualified_degree_name": "",
+        "board_university": "",
+        "qualified_year": "",
+        "total_marks": "",
+        "percentage_of_marks": "",
+        "entrance_type": "",
+        "physics_marks": "",
+        "chemistry_marks": "",
+        "maths_marks": "",
+        "ranking_type": "",
+        "entrance_rank_percentile": "",
+        "entrance_score": "",
+        "other_certificates_pdf_link": "",
+        "certificate_pdf_link": "",
+        "marklist_pdf_link": ""
+    },
+    "guardian_details": {
+        "guardian": {
+            "name": "",
+            "occupation": "",
+            "mobile_number": "",
+            "landline": "",
+            "email": "",
+            "personal_address": "",
+            "communication_address": ""
+        },
+        "mother": {
+            "name": "",
+            "occupation": "",
+            "mobile_number": "",
+            "landline": "",
+            "email": "",
+            "personal_address": "",
+            "communication_address": ""
+        },
+        "father": {
+            "name": "",
+            "occupation": "",
+            "mobile_number": "",
+            "landline": "",
+            "email": "",
+            "personal_address": "",
+            "communication_address": ""
+        }
+    },
+    "curriculum": {
+        "general": {
+            "current_semester": "",
+            "total_cgpa": ""
+        },
+        "semesters": {
+            "1": {
+                "course_code": {
+                    "name": "",
+                    "course_credit": "",
+                    "course_valuation_type": "",
+                    "completed_status": "",
+                    "is_eligible_for_written_exam": "",
+                    "grade": "",
+                    "earned_credit": "",
+                    "examination_details": ""
+                },
+                "sgpa": ""
+            }
+        }
+    },
+    "any_other_data_related_to_api_call_or_anything": {},
+    "_comments": {
+        "request_info": "ISO8601 timestamp and the username used for the request",
+        "personal": "Personal student fields. Avoid committing real PII to public repos.",
+        "name_age_proof": "Direct link to proof PDF (e.g., birth certificate or SSLC book)",
+        "curriculum": "Top-level curriculum info; `semesters` is a map from semester number to course records",
+        "any_other_data_related_to_api_call_or_anything": "Freeform place to put extra fields returned by the scraper"
+    }
+}

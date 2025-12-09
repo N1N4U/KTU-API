@@ -1,0 +1,7 @@
+beautifulsoup4
+coloredlogs
+Flask
+gunicorn
+python-dateutil
+python-dotenv
+requests
