@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🎓 KTU API Scraper
+# 🎓 KTU API
 
-**Lightweight Flask API that scrapes KTU student data and returns structured JSON**
+**Lightweight Flask API that scrapes KTU student data such as grades, personal details, and more from the official KTU website and returns structured JSON**
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/Flask-3.0+-green.svg)](https://flask.palletsprojects.com/)
@@ -29,7 +29,7 @@
 
 ### 1. Clone & Navigate
 ```bash
-git clone <your-repo-url>
+git clone "https://github.com/N1N4U/KTU-API"
 cd "KTU API"
 ```
 
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 ### 4. Configure Environment
 Create a `.env` file in the project root:
 ```env
-SERVER_PORT=30040
+SERVER_PORT=5000
 LOG_LEVEL=INFO
 ```
 
@@ -65,13 +65,13 @@ LOG_LEVEL=INFO
 py app.py
 ```
 
-The server will start on `http://localhost:30040`
+The server will start on `http://localhost:5000`
 
 ---
 
 ## 🌐 Web Interface
 
-Access the modern web UI at **http://localhost:30040/** 
+Access the modern web UI at **http://localhost:5000/** 
 
 ### Features:
 - 🎯 **Dark Theme** — Green accent colors optimized for readability
@@ -79,38 +79,6 @@ Access the modern web UI at **http://localhost:30040/**
 - 📱 **Mobile Responsive** — Code block on top, details below (mobile)
 - ⬇️ **JSON Download** — One-click download button in code header
 - ⚠️ **Error Handling** — Clear error messages for login failures and API issues
-
-### Desktop Layout (16:9):
-```
-┌──────────────────────────────────────────────────────┐
-│              🎓 KTU API Tester Header                │
-├──────────────────────────────────────────────────────┤
-│          Username & Password Input Form              │
-├──────────────────┬───────────────────────────────────┤
-│   Personal Info  │   JSON Response Code Block        │
-│   Admission      │   [Download JSON Button]          │
-│   Contact        │   { ... }                         │
-│   Academic       │                                    │
-└──────────────────┴───────────────────────────────────┘
-```
-
-### Mobile Layout:
-```
-┌──────────────────────────────────┐
-│    🎓 KTU API Tester Header      │
-├──────────────────────────────────┤
-│  Username & Password Input Form  │
-├──────────────────────────────────┤
-│   JSON Response Code Block       │
-│   [Download JSON Button]         │
-│   { ... }                        │
-├──────────────────────────────────┤
-│   Personal Info                  │
-│   Admission                      │
-│   Contact                        │
-│   Academic                       │
-└──────────────────────────────────┘
-```
 
 ---
 
@@ -122,7 +90,7 @@ Retrieve student data by providing KTU credentials.
 
 **Request:**
 ```bash
-curl -X POST http://localhost:30040/api/student \
+curl -X POST http://localhost:5000/api/student \
   -H "Content-Type: application/json" \
   -d '{"username":"stu123","password":"yourpassword"}'
 ```
@@ -165,7 +133,7 @@ curl -X POST http://localhost:30040/api/student \
 
 | Variable      | Default  | Description                              |
 |---------------|----------|------------------------------------------|
-| `SERVER_PORT` | `30040`  | Port where Flask app listens             |
+| `SERVER_PORT` | `5000`  | Port where Flask app listens             |
 | `LOG_LEVEL`   | `INFO`   | Logging verbosity (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
 
 ### Logging
@@ -177,8 +145,8 @@ Logs are written to **stdout** with color-coded levels:
 
 Example log output:
 ```
-2025-12-09 19:56:30 INFO __main__ Starting Flask app host=0.0.0.0 port=30040
-2025-12-09 19:56:32 INFO werkzeug * Running on http://127.0.0.1:30040
+2025-12-09 19:56:30 INFO __main__ Starting Flask app host=0.0.0.0 port=5000
+2025-12-09 19:56:32 INFO werkzeug * Running on http://127.0.0.1:5000
 ```
 
 Change verbosity by setting `LOG_LEVEL=DEBUG` in `.env`.
@@ -213,7 +181,7 @@ py app.py
 
 ### Production Deployment (Gunicorn)
 ```bash
-gunicorn -w 4 -b 0.0.0.0:30040 app:app
+gunicorn -w 4 -b 0.0.0.0:5000 app:app
 ```
 
 ---
